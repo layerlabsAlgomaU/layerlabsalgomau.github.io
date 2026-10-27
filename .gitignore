@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+
+# never commit secrets or local settings
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+*.xlsx
+*.zip

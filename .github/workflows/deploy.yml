@@ -1,0 +1,58 @@
+# Publishes the website to GitHub Pages every time a change is pushed to the "main" branch.
+# (You can also run it by hand: repository > Actions > "Deploy to GitHub Pages" > Run workflow.)
+#
+# What it does: install the packages, build the site and scan it for problems (`npm run check`, the same
+# command you run on your computer), then publish the finished "out" folder. If the check finds a problem,
+# NOTHING is published and the run shows a red cross: open it to read the message.
+#
+# One-time setup in GitHub: repository > Settings > Pages > Build and deployment > Source: "GitHub Actions".
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one publish at a time; a newer push waits for the one already running.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Build the site and check it
+        run: npm run check
+
+      - name: Upload the finished site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

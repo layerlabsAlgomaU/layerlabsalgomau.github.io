@@ -1,0 +1,17 @@
+{
+  "name": "layerlabs-next",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LayerLabs website (Algoma University 3D printing club), built with Next.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "npx serve out",
+    "check": "next build && node scripts/check-site.mjs"
+  },
+  "dependencies": {
+    "next": "^16.4.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  }
+}
